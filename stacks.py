@@ -16,6 +16,7 @@ class Stack(object):
     def s(cls, lst):
         if isinstance(lst, list):
             return cls(lst)
+        return "not a list!"
 
     def __repr__(self):
         if not self.stack:
@@ -23,8 +24,15 @@ class Stack(object):
         else:
             return "<this long: %s last item: %s>" % (len(self.stack), self.stack[-1])
 
+    def __iter__(self):
+        while self.stack:
+            yield self.pop()
+
     def push(self, item):
         self.stack.append(item)
+
+    def extend(self, lst):
+        self.stack.extend(lst)
 
     def len(self):
         return len(self.stack)
@@ -44,4 +52,9 @@ class Stack(object):
     def is_empty(self):
         return not self.stack
 
-    def dump(self)
+    def dump(self):
+        self.stack, result = [], self.stack
+        return result
+
+    def empty(self):
+        self.stack = []
