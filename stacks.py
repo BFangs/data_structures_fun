@@ -16,13 +16,21 @@ class Stack(object):
     def s(cls, lst):
         if isinstance(lst, list):
             return cls(lst)
-        return "not a list!"
+        try:
+            to_list = list(lst)
+            print "is this what you wanted?", to_list
+            return cls(to_list)
+        except:
+            return "not a list!"
 
     def __repr__(self):
         if not self.stack:
             return "<stack is empty!>"
         else:
             return "<this long: %s last item: %s>" % (len(self.stack), self.stack[-1])
+
+    def view(self):
+        return self.stack
 
     def __iter__(self):
         while self.stack:
@@ -37,11 +45,32 @@ class Stack(object):
     def len(self):
         return len(self.stack)
 
-    def pop(self):
-        if not self.stack:
+    def pop(self, num = 1):
+        if not isinstance(num, int):
+            raise StackError("Input invalid, arg should be integer!")
+        if self.len() < num:
             raise StackError("Nothing left in Stack")
-        else:
+        if num == 1:
             return self.stack.pop()
+        removed = []
+        count = 0
+        while count != num:
+            removed.append(self.stack.pop())
+            count += 1
+        return reversed(removed)
+
+    def remove(self, start):
+        """this one takes only a number as input"""
+        removed = self.stack[-num:]
+        self.stack = self.stack[:-num]
+        return removed
+
+    def slice(self, start=0, end=None):
+        if not end:
+            end = self.len()
+        removed = self.stack[start:end]
+        self.stack = self.stack[0:start] + self.stack[end:]
+        return removed
 
     def peek(self, index=-1):
         try:
