@@ -51,12 +51,37 @@ class LinkedList(object):
             curr = curr.next
         return False
 
+    def get_index(self, data):
+        """returns indices data exists in"""
+        if self.is_empty():
+            raise LinkError("nothing here!")
+        count = 0
+        curr = self.head
+        indices = []
+        while curr:
+            if curr.data == data:
+                indices.append(count)
+            curr = curr.next
+            count += 1
+        return indices
+
+    def get_at_index(self, index):
+        """get data at 0 based index"""
+        if self.len() < (index + 1):
+            raise LinkError("index out of range")
+        count = 0
+        curr = self.head
+        while count != index:
+            curr = curr.next
+            count += 1
+        return curr.data
+
     def remove(self, data):
         """remove all nodes with this data"""
         if self.is_empty():
             raise LinkError("nothing to remove!")
         old = self.len()
-        elif self.head.data == data:
+        if self.head.data == data:
             self.head = self.head.next
             if not self.head:
                 self.tail = None
@@ -68,13 +93,38 @@ class LinkedList(object):
                     self.tail = curr
             curr = curr.next
         print "%s items removed" % (old - self.len())
-        
-    ## save method for doubly linked list
-    # def pop(self):
-    #     """pop the last item off the list"""
-    #     if self.is_empty():
-    #         raise LinkError("nothing there!")
-    #     elif self.len() == 1:
+
+    def del_at_index(self, index):
+        """delete node at index"""
+        if self.len() < (index + 1):
+            raise LinkError("index out of range")
+        curr = self.head
+        if index == 0:
+            self.head = curr.next
+            return curr.data
+        count = 0
+        while count != (index - 1):
+            curr = curr.next
+            count += 1
+        removed = curr.next.data
+        curr.next = curr.next.next
+        return removed
+
+    def pop(self):
+        """pop the last item off the list"""
+        if self.is_empty():
+            raise LinkError("nothing there!")
+        popped = self.tail
+        if self.len() == 1:
+            self.head = None
+            self.tail = None
+        curr = self.head
+        while curr:
+            if curr.next == self.tail:
+                self.tail = curr
+                curr.next = None
+            curr = curr.next
+        return popped.data
 
     def chop(self):
         """remove head of list"""
