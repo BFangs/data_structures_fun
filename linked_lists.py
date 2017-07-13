@@ -3,9 +3,9 @@ class LinkError(Exception):
         super(LinkError, self).__init__(msg + ":unable to execute")
 
 class Node(object):
-    def __init__(self, data):
+    def __init__(self, data, nxt=None):
         self.data = data
-        self.next = None
+        self.next = nxt
 
     def __repr__(self):
         return "This node has: %s" % (self.data)
@@ -23,6 +23,43 @@ class LinkedList(object):
         if not self.head:
             return True
         return False
+
+    def get_midpoint(self):
+        slow = self.head
+        fast = self.head
+        while slow and fast:
+            if fast == self.tail:
+                return slow.data
+            fast = fast.next.next
+            if fast == None:
+                return slow.data
+            slow = slow.next
+
+    @classmethod
+    def get_reversed(cls, thing):
+        if not isinstance(thing, LinkedList):
+            raise LinkError("this isn't a linked list!")
+        out = None
+        curr = thing.head
+        while curr:
+            out = Node(curr.data, out)
+            curr = curr.next
+        result = cls(out)
+        return result.head
+
+    def reverse_link(self):
+        if self.len() < 2:
+            return self.head
+        prev = None
+        curr = self.head
+        self.tail = self.head
+        while curr:
+            hold = curr.next
+            curr.next = prev
+            prev = curr
+            curr = hold
+        self.head = prev
+        return self.head
 
     def len(self):
         count = 0
@@ -142,9 +179,39 @@ class LinkedList(object):
             self.tail.next = new
         self.tail = new
 
+    def add_after(self, data, target):
+        new = Node(data)
+        curr = self.head
+        while curr:
+            if curr.data == target:
+                new.next = curr.next
+                curr.next = new
+                return True
+            curr = curr.nextl
+        return False
+
+    def add_at_index(self, data, index):
+        new = Node(data)
+        if self.len < index:
+            raise LinkError("index out of range")
+        curr = self.head
+        if index == 0:
+            new.next = curr
+            self.head = new
+            return True
+        count = 0
+        while curr:
+            if count == (index - 1):
+                new.next = curr.next
+                curr.next = new
+                return True
+            curr = curr.next
+            count +=1
+
     def extend(self, lst):
         for item in lst:
             self.add(item)
+        return self
 
     @classmethod
     def link(cls, lst):

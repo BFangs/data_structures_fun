@@ -4,8 +4,10 @@ class DoubleError(Exception):
 
 
 class Node(object):
-    def __init__(self, data):
+    def __init__(self, data, prev=None, nex=None):
         self.data = data
+        self.prev = prev
+        self.next = nex
 
     def __repr__(self):
         return "This node has: %s" % (self.data)
@@ -13,4 +15,10 @@ class Node(object):
 
 class DoubleLinkedList(object):
     def __init__(self, data=None):
+        self.head = data
+        self.tail = data
+
+    def add(self, data):
+        last = self.tail
+        new = Node(data, last)
         
