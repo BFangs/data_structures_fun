@@ -16,6 +16,15 @@ class LinkedList(object):
         self.head = head
         self.tail = head
 
+    def __str__(self):
+        curr = self.head
+        stub = "<"
+        while curr.next:
+            stub += str(curr.data) + ", "
+            curr = curr.next
+        stub += str(curr.data)
+        return stub + ">"
+
     def __repr__(self):
         return "This linked list starts: %s and is %s long!" % (self.head, self.len())
 
@@ -41,10 +50,12 @@ class LinkedList(object):
             raise LinkError("this isn't a linked list!")
         out = None
         curr = thing.head
+        end = thing.head
         while curr:
             out = Node(curr.data, out)
             curr = curr.next
         result = cls(out)
+        result.tail = end
         return result.head
 
     def reverse_link(self):
@@ -147,6 +158,62 @@ class LinkedList(object):
         curr.next = curr.next.next
         return removed
 
+    def del_slice(self, i1, i2):
+        if self.len() < (max(i1, i2) + 1):
+            raise LinkError("index out of range")
+        if i1 == i2:
+            return LinkedList()
+        if i1 + 1 == i2:
+            return self.del_at_index(i1)
+        curr = self.head
+        popped = LinkedList()
+        stub = None
+        count = 0
+        hold = None
+        if i1 == 0:
+            popped.head = curr
+            stub = popped.head
+        while curr:
+            if count == i1-1:
+                popped.head = curr.next
+                stub = popped.head
+                hold = curr
+            elif count == i2-1:
+                if hold:
+                    hold.next = curr.next
+                stub.next = None
+                break
+            elif count >= i1:
+                stub = stub.next
+            curr = curr.next
+            count += 1
+        return popped
+
+
+    def slice_index(self, i1, i2):
+        if self.len() < (max(i1, i2) + 1):
+            raise LinkError("index out of range")
+        if i1 == i2:
+            return LinkedList()
+        if i1 + 1 == i2:
+            return self.get_at_index(i1)
+        curr = self.head
+        count = 0
+        new = LinkedList()
+        while curr:
+            if count == i1:
+                new.head = curr
+                stub = new.head
+            elif (count < i2) and (count > i1):
+                stub.next = curr
+                stub = stub.next
+            elif count == i2:
+                stub.next = None
+            curr = curr.next
+            count += 1
+        return new
+
+
     def pop(self):
         """pop the last item off the list"""
         if self.is_empty():
@@ -218,3 +285,11 @@ class LinkedList(object):
         creation = cls()
         creation.extend(lst)
         return creation
+
+    def unlink(self):
+        result = []
+        curr = self.head
+        while curr:
+            result.append(curr.data)
+            curr = curr.next
+        return result
