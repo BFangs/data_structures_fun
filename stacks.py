@@ -3,6 +3,7 @@ class StackError(Exception):
     def __init__(self, msg):
         super(StackError, self).__init__(msg + (": unable to execute!"))
 
+
 class Stack(object):
     """implemented using a list"""
 
@@ -45,7 +46,7 @@ class Stack(object):
     def len(self):
         return len(self.stack)
 
-    def pop(self, num = 1):
+    def pop(self, num=1):
         if not isinstance(num, int):
             raise StackError("Input invalid, arg should be integer!")
         if self.len() < num:
@@ -59,7 +60,7 @@ class Stack(object):
             count += 1
         return reversed(removed)
 
-    def remove(self, start):
+    def remove(self, num):
         """this one takes only a number as input"""
         removed = self.stack[-num:]
         self.stack = self.stack[:-num]
