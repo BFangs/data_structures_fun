@@ -2,6 +2,7 @@ class LinkError(Exception):
     def __init__(self, msg):
         super(LinkError, self).__init__(msg + ":unable to execute")
 
+
 class Node(object):
     def __init__(self, data, nxt=None):
         self.data = data
@@ -40,7 +41,7 @@ class LinkedList(object):
             if fast == self.tail:
                 return slow.data
             fast = fast.next.next
-            if fast == None:
+            if fast is None:
                 return slow.data
             slow = slow.next
 
@@ -189,7 +190,6 @@ class LinkedList(object):
             count += 1
         return popped
 
-
     def slice_index(self, i1, i2):
         if self.len() < (max(i1, i2) + 1):
             raise LinkError("index out of range")
@@ -212,7 +212,6 @@ class LinkedList(object):
             curr = curr.next
             count += 1
         return new
-
 
     def pop(self):
         """pop the last item off the list"""
@@ -273,7 +272,7 @@ class LinkedList(object):
                 curr.next = new
                 return True
             curr = curr.next
-            count +=1
+            count += 1
 
     def extend(self, lst):
         for item in lst:
